@@ -1,0 +1,16 @@
+__pycache__
+DB/token*
+DB/credentials.json
+DB.db
+keep_alive.py
+logs/out.txt
+logs/logs.txt
+
+# Replit
+.breakpoints
+.replit
+poetry.lock
+pyproject.toml
+replit.nix
+venv/
+ca-certificates.crt
