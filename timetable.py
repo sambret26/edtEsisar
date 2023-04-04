@@ -161,7 +161,7 @@ def deleteEvents(area):
     printLogs(logs.MAJ, logs.INFO, "Deleting events for {}".format(area))
     events = DB.getCalIdUnfind(area)
     for calId in events:
-        if calId == "None" or cal.delete(area, calId):
+        if calId == "None" or cal.deleteEvent(area, calId):
             DB.deleteEvent(area, calId)
 
 # This function retrieves all pasts events within a specified area (indicated by 'ToRemove = 1')
