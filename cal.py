@@ -94,7 +94,7 @@ def createEvent(area, event, retry=5):
     # event : the event to update
 # This function try 5 times to update an event on google calendar
 def updateEvent(area, event, retry=5):
-    calId = event["Id"]
+    calId = event["id"]
     if retry == 0:
         printLogs(logs.CAL, logs.ERROR, "Error updating {}".format(calId))
         return

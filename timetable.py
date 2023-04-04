@@ -161,7 +161,7 @@ def deleteEvents(area):
     printLogs(logs.MAJ, logs.INFO, "Deleting events for {}".format(area))
     events = DB.getCalIdUnfind(area)
     for calId in events:
-        if calId = "None" or cal.delete(area, calId):
+        if calId == "None" or cal.delete(area, calId):
             DB.deleteEvent(area, calId)
 
 # This function retrieves all pasts events within a specified area (indicated by 'ToRemove = 1')
@@ -294,8 +294,9 @@ def reverseUpdate(area):
     listEventsOnCalendar = cal.getCalendarEvents(area)
     listEventsOnDatabase = DB.getCalId(area)
     for calEvent in listEventsOnCalendar:
-        if calEvent["Id"] in listEventsOnDatabase:
-            (sd2, ed2, s2, d, c2, n, t) = DB.getInfo(area, calEvent["Id"])
+        print(calEvent)
+        if calEvent["id"] in listEventsOnDatabase:
+            (sd2, ed2, s2, d, c2, n, t) = DB.getInfo(area, calEvent["id"])
             if s2.startswith("Exam "): s2 = s2[5:]
             c2 = str(c2)
             if t != 0:
