@@ -156,13 +156,13 @@ def insertEvents(area):
         DB.setToAdd(calId, event[0])
 
 # This function retrieves all canceled events within a specified area (indicated by 'Find = 0')
-# All thoses events are removed from calendar AND database
+# All thoses events are removed from calendar (if they are in) AND database
 def deleteEvents(area):
     printLogs(logs.MAJ, logs.INFO, "Deleting events for {}".format(area))
     events = DB.getCalIdUnfind(area)
     for calId in events:
-        ok = cal.deleteEvent(area, calId)
-        if ok : DB.deleteEvent(area, calId)
+        if calId = "None" or cal.delete(area, calId):
+            DB.deleteEvent(area, calId)
 
 # This function retrieves all pasts events within a specified area (indicated by 'ToRemove = 1')
 # All thoses events are remove from calendar and Flaged with Past =  and CalId = "None" in database
