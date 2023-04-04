@@ -4,7 +4,7 @@
 import sys
 sys.path.append("modules")
 from datetime import datetime as date
-from functions import printFormat, erase
+from logs import printFormat, erase
 import timetable
 import time
 import os
