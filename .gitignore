@@ -5,6 +5,7 @@ DB.db
 keep_alive.py
 logs/out.txt
 logs/logs.txt
+test.py
 
 # Replit
 .breakpoints
