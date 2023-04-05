@@ -290,7 +290,7 @@ def isOver(event):
     # If it's finish it's delete
     # If not, nothing happend.
     # Maybe a good idea to put it in db ? Let's thing about it ...
-def reverseUpdate(area):
+def updateDatabaseFromCalendar(area):
     printLogs(logs.MAJ, logs.INFO, "Updating in reverse for {}".format(area))
     DB.setCurrentEventsToUnfind(area)
     listEventsOnCalendar = cal.getCalendarEvents(area)
