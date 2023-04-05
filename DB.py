@@ -131,13 +131,23 @@ def getCalId(area):
 def getInfo(area, calId):
     connection = connect()
     cursor = connection.cursor()
-    query = "SELECT Start, End, Subject, Description, Color, Number, Total FROM Events WHERE (CalId, Area) = (?, ?)"
+    query = "SELECT Id, Start, End, Subject, Description, Color, Number, Total FROM Events WHERE (CalId, Area) = (?, ?)"
     if area == "2ATP1" :
-        query = "SELECT Start, End, Type, Description, Color, Number, Total FROM Events WHERE (CalId, Area) = (?, ?)"
+        query = "SELECT Id, Start, End, Type, Description, Color, Number, Total FROM Events WHERE (CalId, Area) = (?, ?)"
     values = (calId, area)
     data = cursor.execute(query, values).fetchone()
     connection.close()
     return data
+
+# Return missing events in the calendar (there are not past but not found)
+def getMissingEvents(area):
+    connection = connect()
+    cursor = connection.cursor()
+    query = "SELECT CalId FROM Events WHERE (Area, Find, Past) = (?, ?, ?)"
+    values = (area, 0, 0)
+    listCalId = [event[0] for event in cursor.execute(query,values).fetchall()]
+    connection.commit()
+    return listCalId
 
 # This function look if there is an event with given field in the database
 # If yes, it returns it's Id, Past and CalId fields.
@@ -164,6 +174,20 @@ def setEventsToUnfind(area):
     connection = connect()
     cursor = connection.cursor()
     query = "UPDATE Events SET Find = ? WHERE Area = ?"
+    values = (0, area)
+    cursor.execute(query, values)
+    connection.commit()
+    connection.close()
+
+# This function is used to update database from calendar
+# We want to know every event missing in cal
+# Setting the flag Find to 0 is the init step
+# After that, real event (always present) will be flags with Find = 1
+def setCurrentEventsToUnfind(area):
+    printLogs(logs.DB, logs.INFO, "Setting current events to unfind for {}".format(area))
+    connection = connect()
+    cursor = connection.cursor()
+    query = "UPDATE Events SET Find = ? WHERE (Area, Past) = (?, 0)"
     values = (0, area)
     cursor.execute(query, values)
     connection.commit()
@@ -232,7 +256,7 @@ def deleteEvent(area, calId):
     values = (calId, area)
     cursor.execute(query, values)
     connection.commit()
-    printLogs(logs.DB, logs.INFO, "Deleting {} {}".format(datas[2], datas[0]))
+    printLogs(logs.DB, logs.INFO, "Deleting {} {}".format(datas[3], datas[1]))
 
 
     ### INSERT

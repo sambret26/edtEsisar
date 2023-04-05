@@ -23,23 +23,24 @@ def update():
     printLogs(logs.MAJ, logs.INFO, "End of update")
 
 # Run update the calendar of a given area
-# 3 steps :
-    # 1) get the event on the ginp website (cal.getEvents)
-    # 2) Update the database with those events (updateDatabase)
-    # 3) Update the calendar with the database (updateCalendar)
+# 4 steps :
+    # 1) Update the database from the events in the calendar (updateDatabaseFromCalendar)
+    # 2) Get the event on the ginp website (cal.getEvents)
+    # 3) Update the database with those events (updateDatabase)
+    # 4) Update the calendar with the database (updateCalendar)
 def run(area):
     printLogs(logs.MAJ, logs.INFO, "Update {}".format(area))
     skip = 0
     urlId = DB.getId(area)
+    updateDatabaseFromCalendar(area)
     eventsList = cal.getEvents(urlId)
     if eventsList == [] or "invalid" in eventsList[0] : skip=1
     if not skip :
         updateDatabase(eventsList, area)
         updateCalendar(area)
-        reverseUpdate(area)
     printLogs(logs.MAJ, logs.INFO, "End of update {}".format(area))
 
-# This is the 2nd step of the "run" function
+# This is the 3rd step of the "run" function
 # There is 4 steps to update the db :
     # 1) Set all events to Unfind ()
     # 2) Browse all events and see if there are in database
@@ -51,7 +52,7 @@ def updateDatabase(eventsList, area):
     checkPastEvents(area)
     addNumber(area)
 
-# This is the 3rd step of the "run" function
+# This is the 4th step of the "run" function
 # There is 3 steps to update the calendar :
     # 1) Insert in the calendar all events with flag ToAdd = 1
     # 2) Delete canceled events (in calendar AND database) (Flag ToRemove = 1)
@@ -282,7 +283,7 @@ def isOver(event):
 # For exemple, if someone move handly an event on the calendar
 # This event has to be re-placed
 # This function look every events in the calendar
-# If this event is in the database, :
+# If this event is in the database :
     # It check if every field is ok
     # If no, the field of the database are used to re-placed this event
 # If this  event is not in database
@@ -291,12 +292,12 @@ def isOver(event):
     # Maybe a good idea to put it in db ? Let's thing about it ...
 def reverseUpdate(area):
     printLogs(logs.MAJ, logs.INFO, "Updating in reverse for {}".format(area))
+    DB.setCurrentEventsToUnfind(area)
     listEventsOnCalendar = cal.getCalendarEvents(area)
     listEventsOnDatabase = DB.getCalId(area)
     for calEvent in listEventsOnCalendar:
-        print(calEvent)
         if calEvent["id"] in listEventsOnDatabase:
-            (sd2, ed2, s2, d, c2, n, t) = DB.getInfo(area, calEvent["id"])
+            (id, sd2, ed2, s2, d, c2, n, t) = DB.getInfo(area, calEvent["id"])
             if s2.startswith("Exam "): s2 = s2[5:]
             c2 = str(c2)
             if t != 0:
@@ -319,9 +320,14 @@ def reverseUpdate(area):
                 calEvent["start"]["dateTime"] = sd2
                 calEvent["end"]["dateTime"] = ed2
                 cal.updateEvent(area, calEvent)
+            DB.setEventToFind(id, calEvent["id"])
             continue
         ed = calEvent["end"]["dateTime"][0:19]
         id = calEvent["id"]
         newEvent = {"End" : ed, "Id" : id}
         if isOver(newEvent):
-            cal.deleteEvents(area, newEvent["Id"])
+            cal.deleteEvent(area, newEvent["Id"])
+    listCalId = DB.getMissingEvents(area)
+    printLogs(logs.MAJ, logs.INFO, "Number of missing events : {}".format(len(listCalId)))
+    for calId in listCalId :
+        DB.deleteEvent(area, calId)
