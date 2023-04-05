@@ -6,11 +6,11 @@ from functions import getCurrentDate
 # CONST
 
 MAJ = "[MAJ]"
-DB  = "[DB ]"
+DB = "[DB ]"
 CAL = "[CAL]"
 
-INFO  = "[INFO ]"
-WARN  = "[WARN ]"
+INFO = "[INFO ]"
+WARN = "[WARN ]"
 ERROR = "[ERROR]"
 
 
@@ -22,12 +22,15 @@ def printFormat(message):
   with open("./logs/out.txt", 'a') as f:
     f.write(formattedMessage)
 
+
 # Print the date and the message on the file logs/logs.txt
 def printLogs(type1, type2, message):
   currentDate = str(getCurrentDate().strftime("%d/%m %Hh%M"))
-  formattedMessage ="{} : {} {} {}\n".format(currentDate, type1, type2, message)
+  formattedMessage = "{} : {} {} {}\n".format(currentDate, type1, type2,
+                                              message)
   with open("./logs/logs.txt", 'a') as f:
     f.write(formattedMessage)
+
 
 # Erase the content of the file logs/out.txt
 def erase():
