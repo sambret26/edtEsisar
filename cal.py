@@ -43,9 +43,9 @@ def deleteEvent(area, calId, retry=5):
 # Could be [] or "invalid" in case of fail (between 1am to 2am)
 def getEvents(urlId):
   printLogs(logs.MAJ, logs.INFO, "Fetching event on id {}".format(urlId))
-  inpUrl = 'https://edt.grenoble-inp.fr/directCal/2022-2023/etudiant/esisar?resources=' + str(
+  inpUrl = 'https://edt.grenoble-inp.fr/directCal/2023-2024/etudiant/esisar?resources=' + str(
     urlId
-  ) + '&startDay=28&startMonth=08&startYear=2022&endDay=30&endMonth=07&endYear=2023'
+  ) + '&startDay=28&startMonth=08&startYear=2023&endDay=30&endMonth=07&endYear=2024'
   headers = load("tokenAgalan")
   r = url.PoolManager().request('GET', inpUrl, headers=headers)
   result = r.data.decode('utf-8').splitlines()
