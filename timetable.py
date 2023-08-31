@@ -208,7 +208,7 @@ def dtStart(event):
 # This function give an offset to the date depending of the date and the GMT
 def jetLag(date):
   dateWithoutYear = int(str(date)[2:])
-  if dateWithoutYear > 3260300 and dateWithoutYear < 10310300: date += 200
+  if dateWithoutYear > 3310200 and dateWithoutYear < 10290300: date += 200
   else: date += 100
   return date
 
