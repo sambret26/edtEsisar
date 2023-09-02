@@ -32,12 +32,10 @@ def update():
 # 4) Update the calendar with the database (updateCalendar)
 def run(area):
   printLogs(logs.MAJ, logs.INFO, "Update {}".format(area))
-  skip = 0
   urlId = DB.getId(area)
   updateDatabaseFromCalendar(area)
   eventsList = cal.getEvents(urlId)
-  if eventsList == [] or "invalid" in eventsList[0]: skip = 1
-  if not skip:
+  if eventsList != [] and not "invalid" in eventsList[0]:
     updateDatabase(eventsList, area)
     updateCalendar(area)
   printLogs(logs.MAJ, logs.INFO, "End of update {}".format(area))
@@ -91,7 +89,7 @@ def browseEvents(eventsList, area):
     for line in values:
       if ("DTSTART") in line: start = dtStart(line)
       elif ("DTEND") in line: end = dtEnd(line)
-      elif ("SUMMARY") in line: event["Subject"] = trunc(summary(line))
+      elif ("SUMMARY") in line: event["Subject"] = summary(line)
       elif ("LOCATION") in line: event["Room"] = location(line)
       elif ("DESCRIPTION") in line:
         event["Description"], event["Type"], ok, event["Color"], event[
@@ -180,8 +178,7 @@ def removePastEvents(area):
   printLogs(logs.MAJ, logs.INFO, "Removing pasts events for {}".format(area))
   events = DB.getIdCalIdToRemove(area)
   for event in events:
-    ok = cal.deleteEvent(area, event[1])
-    if ok:
+    if cal.deleteEvent(area, event[1]):
       DB.setPastToRemoveCalId(event[0])
 
 
@@ -228,6 +225,7 @@ def location(event):
   room = room.replace("_CM", "")
   room = room.replace("-optique", "")
   room = room.replace("\, ", " ou ")
+  room = room.replace("\,", " ou ")
   return room
 
 
@@ -260,14 +258,6 @@ def description(event, subject, room):
   elif type in ["Exam", "DS"]: color = 5  #Jaune (Banane)
   else: color = 8
   return description, "{} {}".format(type, subject), ok, color, teacher
-
-
-# This function is used because in 2023 the 2nd year have a very
-# special feature in the ginp calendar
-def trunc(subject):
-  if subject[-2:] == "CM": return subject[:-3]
-  if subject[-3:-1] in ["TD", "TP"]: return subject[:-4]
-  return subject
 
 
 # This function parse the date
