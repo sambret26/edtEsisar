@@ -133,6 +133,7 @@ def getCalendarEvents(area):
   eventsResults = service.events().list(calendarId=calendarId,
                                         timeMin=lastYear,
                                         singleEvents=True,
+                                        maxResults=2500,
                                         orderBy='startTime').execute()
   events = eventsResults.get("items", [])
   return events
