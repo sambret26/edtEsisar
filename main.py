@@ -21,8 +21,7 @@ def recurring_task():
   erase()
   timetable.update()
   while 1:
-    if int(date.now().strftime("%H")) >= 7 and int(
-        date.now().strftime("%M")) % 15 == 0:
+    if int(date.now().strftime("%M")) % 15 == 0:
       printFormat("Mise à jour des agendas")
       timetable.update()
     time.sleep(60)
