@@ -17,4 +17,4 @@ def deleteCal(area):
             service.events().delete(calendarId=calendarId, eventId=event['id']).execute()
 
 
-deleteCal("3ATP1")
+deleteCal("3ATP1A")
