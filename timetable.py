@@ -246,8 +246,12 @@ def description(event, subject, room):
   teacher = description[3]
   if teacher == "* Surveillant": type, teacher = "CC", '('
   if teacher == "*": teacher = '('
-  if type != "": description = "{} de {}".format(type, subject)
-  else: description = subject
+  if type != "":
+      description = "{} de {}".format(type, subject)
+      returnType = "{} {}".format(type, subject)
+  else:
+      description = subject
+      returnType = subject
   if not '(' in teacher: description += (" avec " + teacher)
   if room != '' and room != '*': description += (" en " + room)
   if type == "CM": color = 10  #Vert (Basilic)
@@ -257,7 +261,7 @@ def description(event, subject, room):
   elif type == "": color = 3  #Violet (Raisin)
   elif type in ["Exam", "DS"]: color = 5  #Jaune (Banane)
   else: color = 8
-  return description, "{} {}".format(type, subject), ok, color, teacher
+  return description, returnType, ok, color, teacher
 
 
 # This function parse the date
