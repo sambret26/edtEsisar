@@ -232,7 +232,7 @@ def location(event):
 # This function extract the type and the teacher from the description line
 def description(event, subject, room):
   ok = True
-  if "rattrap" in subject or "1/3" in subject: ok = False
+  if "rattrap" in subject or "1/3" in subject or "AC311" in subject: ok = False
   description = event.split("\\n")
   description[2] = description[2].replace("STD", "S1")
   if ("Examen") in subject: type = "Exam"
