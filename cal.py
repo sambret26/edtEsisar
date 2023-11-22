@@ -22,16 +22,16 @@ import DB
 # This function try 5 times to delete an event on google calendar
 def deleteEvent(area, calId, retry=5):
   if retry == 0:
-    printLogs(logs.CAL, logs.ERROR, "Error deleting {}".format(calId))
+    printModifs(logs.CAL, logs.ERROR, "Error deleting {}".format(calId))
     return False
   calendarId = DB.getCalendarId(area)
   service = build('calendar', 'v3', credentials=findCreds(area))
   try:
     service.events().delete(calendarId=calendarId, eventId=calId).execute()
-    printLogs(logs.CAL, logs.INFO, "Deleted {}".format(calId))
+    printModifs(logs.CAL, logs.INFO, "Deleted {}".format(calId))
     return True
   except:
-    printLogs(logs.CAL, logs.WARN,
+    printModifs(logs.CAL, logs.WARN,
               "Retry delete ({}) ({})".format(retry, calId))
     return deleteEvent(area, calId, retry - 1)
 
@@ -61,7 +61,7 @@ def getEvents(urlId):
 # This function try 5 times to add an event on google calendar
 def createEvent(area, event, retry=5):
   if retry == 0:
-    printLogs(
+    printModifs(
       logs.CAL, logs.ERROR,
       "Error creating {} on {}".format(event["Subject"], event["Start"]))
     return False
@@ -94,10 +94,10 @@ def createEvent(area, event, retry=5):
     id = service.events().insert(calendarId=calendarId,
                                  body=newEvent,
                                  sendNotifications=True).execute()["id"]
-    printLogs(logs.CAL, logs.INFO, "Created {}".format(id))
+    printModifs(logs.CAL, logs.INFO, "Created {}".format(id))
     return id
   except:
-    printLogs(logs.CAL, logs.WARN, "Retry create ({})".format(retry))
+    printModifs(logs.CAL, logs.WARN, "Retry create ({})".format(retry))
     return createEvent(area, event, retry - 1)
 
 
@@ -108,16 +108,16 @@ def createEvent(area, event, retry=5):
 def updateEvent(area, event, retry=5):
   calId = event["id"]
   if retry == 0:
-    printLogs(logs.CAL, logs.ERROR, "Error updating {}".format(calId))
+    printModifs(logs.CAL, logs.ERROR, "Error updating {}".format(calId))
     return
   try:
     calendarId = DB.getCalendarId(area)
     service = build('calendar', 'v3', credentials=findCreds(area))
     service.events().update(calendarId=calendarId, eventId=calId,
                             body=event).execute()
-    printLogs(logs.CAL, logs.INFO, "Updated {}".format(calId))
+    printModifs(logs.CAL, logs.INFO, "Updated {}".format(calId))
   except:
-    printLogs(logs.CAL, logs.WARN,
+    printModifs(logs.CAL, logs.WARN,
               "Retry update ({}) ({})".format(retry, calId))
     updateEvent(area, event, retry - 1)
 

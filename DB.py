@@ -225,7 +225,7 @@ def setEventToFind(id, calId):
 
 # This function set/unset flags Past, ToRemove and ToAdd for a given event
 def setPastToRemoveToAdd(toRemove, id, calId):
-  printLogs(
+  printModifs(
     logs.DB, logs.INFO,
     "Setting Past = 1, ToRemove = {}, ToAdd = 0 at {}".format(toRemove, calId))
   connection = connect()
@@ -252,7 +252,7 @@ def setNumbers(values, calId):
 
 # This function set ToAdd = 0 for a given event
 def setToAdd(calId, Id):
-  printLogs(logs.DB, logs.INFO, "Setting CalId = {}, ToAdd = 0".format(calId))
+  printModifs(logs.DB, logs.INFO, "Setting CalId = {}, ToAdd = 0".format(calId))
   connection = connect()
   cursor = connection.cursor()
   query = "UPDATE Events SET (CalId, ToAdd) = (?, 0) WHERE Id = ?"
@@ -264,7 +264,7 @@ def setToAdd(calId, Id):
 
 # This function set Past = 1, ToRemove = 0 and CalId = "None" for a given event
 def setPastToRemoveCalId(calId):
-  printLogs(logs.DB, logs.INFO,
+  printModifs(logs.DB, logs.INFO,
             "Setting Past = 1, ToRemove = 0 at {}".format(calId))
   connection = connect()
   cursor = connection.cursor()
@@ -284,7 +284,7 @@ def deleteEvent(area, calId):
   values = (calId, area)
   cursor.execute(query, values)
   connection.commit()
-  printLogs(logs.DB, logs.INFO, "Deleting {} {}".format(datas[3], datas[1]))
+  printModifs(logs.DB, logs.INFO, "Deleting {} {}".format(datas[3], datas[1]))
 
   ### INSERT
 
@@ -293,7 +293,7 @@ def deleteEvent(area, calId):
 def addEvent(area, event):
   connection = connect()
   cursor = connection.cursor()
-  printLogs(logs.DB, logs.INFO,
+  printModifs(logs.DB, logs.INFO,
             "Adding in DB {} {}".format(event["Subject"], event["Start"]))
   values = (event["CalId"], event["Start"], event["End"], event["SimplyEnd"],
             event["Subject"], event["Type"], event["Room"], event["Teacher"],
