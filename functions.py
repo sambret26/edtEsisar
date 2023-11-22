@@ -17,7 +17,7 @@ def load(name):
 def getCurrentDate():
   offset = 0
   if "REPLIT" in os.environ:
-    offset = 2
+    offset = 1
   return date.now() + timedelta(seconds=3600 * offset)
 
 
