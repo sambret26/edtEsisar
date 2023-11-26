@@ -7,6 +7,7 @@ sys.path.append("modules")
 from datetime import datetime as date
 from logs import printFormat, erase
 import timetable
+import schedule
 import time
 import os
 
@@ -18,14 +19,22 @@ if "REPLIT" in os.environ:
 
 # RECURING TASKS
 def recurring_task():
+  printFormat("Mise à jour des agendas")
+  timetable.update()
+
+
+# MAIN
+def main():
   erase()
   timetable.update()
+  schedule.every().hours.at(":00").do(recurring_task)
+  schedule.every().hours.at(":15").do(recurring_task)
+  schedule.every().hours.at(":30").do(recurring_task)
+  schedule.every().hours.at(":48").do(recurring_task)
   while 1:
-    if int(date.now().strftime("%M")) % 15 == 0:
-      printFormat("Mise à jour des agendas")
-      timetable.update()
-    time.sleep(60)
+    schedule.run_pending()
+    time.sleep(10)
 
 
 # START
-recurring_task()
+main()
