@@ -30,7 +30,7 @@ def main():
   schedule.every().hours.at(":00").do(recurring_task)
   schedule.every().hours.at(":15").do(recurring_task)
   schedule.every().hours.at(":30").do(recurring_task)
-  schedule.every().hours.at(":48").do(recurring_task)
+  schedule.every().hours.at(":45").do(recurring_task)
   while 1:
     schedule.run_pending()
     time.sleep(10)
