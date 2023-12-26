@@ -215,7 +215,9 @@ def summary(event):
   subject = (event.split(":"))[1]
   if '-' in subject and not 'Demi' in subject:
     subject = subject.split('-')[0]
-  return subject.replace(' ','')
+  while subject[-1] == ' ' :
+      subject = subject[:-1]
+  return subject
 
 
 # This function extract the room from the location line
