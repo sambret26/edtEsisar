@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # IMPORTS
-from logs import printLogs
+from logs import printLogs, printModifs
 import sqlite3
 import logs
 
@@ -252,7 +252,8 @@ def setNumbers(values, calId):
 
 # This function set ToAdd = 0 for a given event
 def setToAdd(calId, Id):
-  printModifs(logs.DB, logs.INFO, "Setting CalId = {}, ToAdd = 0".format(calId))
+  printModifs(logs.DB, logs.INFO,
+              "Setting CalId = {}, ToAdd = 0".format(calId))
   connection = connect()
   cursor = connection.cursor()
   query = "UPDATE Events SET (CalId, ToAdd) = (?, 0) WHERE Id = ?"
@@ -265,7 +266,7 @@ def setToAdd(calId, Id):
 # This function set Past = 1, ToRemove = 0 and CalId = "None" for a given event
 def setPastToRemoveCalId(calId):
   printModifs(logs.DB, logs.INFO,
-            "Setting Past = 1, ToRemove = 0 at {}".format(calId))
+              "Setting Past = 1, ToRemove = 0 at {}".format(calId))
   connection = connect()
   cursor = connection.cursor()
   query = "UPDATE Events SET (Past, ToRemove, CalId) = (?, ?, ?) WHERE Id = ?"
@@ -294,7 +295,7 @@ def addEvent(area, event):
   connection = connect()
   cursor = connection.cursor()
   printModifs(logs.DB, logs.INFO,
-            "Adding in DB {} {}".format(event["Subject"], event["Start"]))
+              "Adding in DB {} {}".format(event["Subject"], event["Start"]))
   values = (event["CalId"], event["Start"], event["End"], event["SimplyEnd"],
             event["Subject"], event["Type"], event["Room"], event["Teacher"],
             event["Description"], event["Color"], event["Number"],

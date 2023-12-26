@@ -6,7 +6,7 @@ from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from datetime import datetime as date
 from functions import load, getLastYear
-from logs import printLogs
+from logs import printLogs, printModifs
 import os.path as path
 import urllib3 as url
 import pickle
@@ -32,7 +32,7 @@ def deleteEvent(area, calId, retry=5):
     return True
   except:
     printModifs(logs.CAL, logs.WARN,
-              "Retry delete ({}) ({})".format(retry, calId))
+                "Retry delete ({}) ({})".format(retry, calId))
     return deleteEvent(area, calId, retry - 1)
 
 
@@ -118,7 +118,7 @@ def updateEvent(area, event, retry=5):
     printModifs(logs.CAL, logs.INFO, "Updated {}".format(calId))
   except:
     printModifs(logs.CAL, logs.WARN,
-              "Retry update ({}) ({})".format(retry, calId))
+                "Retry update ({}) ({})".format(retry, calId))
     updateEvent(area, event, retry - 1)
 
 
