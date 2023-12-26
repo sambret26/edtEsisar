@@ -93,7 +93,8 @@ def browseEvents(eventsList, area):
       elif ("LOCATION") in line: event["Room"] = location(line)
       elif ("DESCRIPTION") in line:
         event["Description"], event["Type"], ok, event["Color"], event[
-          "Teacher"] = description(line, event["Subject"], event["Room"])
+          "Teacher"] = description(line, event["Subject"], event["Room"],
+          start)
     if not ok: continue
     event["Start"] = realDate(start)
     event["End"] = realDate(end)
@@ -232,7 +233,7 @@ def location(event):
 
 
 # This function extract the type and the teacher from the description line
-def description(event, subject, room):
+def description(event, subject, room, start):
   ok = True
   if "rattrap" in subject or "1/3" in subject or "AC311" in subject: ok = False
   description = event.split("\\n")
@@ -245,6 +246,12 @@ def description(event, subject, room):
   elif ("HA") in description[2]: type = "HA"
   elif ("DS") in description[2]: type = "DS"
   else: type = ""
+  if start > 2401100900 and start < 2401110000 :
+      type = "Exam"
+  if start > 2401140000 and start < 2401200000 :
+      type = "Exam"
+  if start > 2405270000 and start < 2406010000 :
+      type = "Exam"
   teacher = description[3]
   if teacher == "* Surveillant": type, teacher = "CC", '('
   if teacher == "*": teacher = '('
