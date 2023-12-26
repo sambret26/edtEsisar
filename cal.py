@@ -73,8 +73,9 @@ def createEvent(area, event, retry=5):
     else:
       description = "{} ({}/{})".format(event["Description"], event["Number"],
                                         event["Total"])
-    subject = event["Subject"]
-    if area == "3ATP5" and not "Exam" in event["Type"]: subject = event["Type"]
+    #subject = event["Subject"]
+    #if area == "3ATP5" and not "Exam" in event["Type"]: subject = event["Type"]
+    subject = event["Type"]
     if event["Number"] == event[
         "Total"] and event["Number"] > 1 and not "CC" in event["Type"]:
       subject += "\n-LAST-"
