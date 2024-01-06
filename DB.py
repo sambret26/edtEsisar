@@ -144,7 +144,7 @@ def getInfo(area, calId):
   connection = connect()
   cursor = connection.cursor()
   query = "SELECT Id, Start, End, Subject, Description, Color, Number, Total FROM Events WHERE (CalId, Area) = (?, ?)"
-  if area == "3ATP5":
+  if area.startswith("3A"):
     query = "SELECT Id, Start, End, Type, Description, Color, Number, Total FROM Events WHERE (CalId, Area) = (?, ?)"
   values = (calId, area)
   data = cursor.execute(query, values).fetchone()
