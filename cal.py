@@ -48,7 +48,7 @@ def getEvents(urlId):
   ) + '&startDay=28&startMonth=08&startYear=2023&endDay=30&endMonth=07&endYear=2024'
   headers = load("tokenAgalan")
   r = url.PoolManager().request('GET', inpUrl, headers=headers)
-  result = r.data.decode('utf-8').splitlines()
+  result = r.data.decode('utf-8', errors='ignore').splitlines()
   eventsList = ('\n'.join(result)).split("BEGIN")
   return eventsList
 
