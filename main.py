@@ -4,7 +4,6 @@
 import sys
 
 sys.path.append("modules")
-from datetime import datetime as date
 from logs import printFormat, erase
 import timetable
 import schedule
