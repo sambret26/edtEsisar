@@ -151,8 +151,9 @@ def findCreds(area):
   creds = None
   timetable = DB.getTimetable(area)
   fileName = "token" + str(timetable)
-  if path.exists("DB/" + fileName + ".pkl"):
-    creds = load(fileName)
+  #if path.exists("DB/" + fileName + ".pkl"):
+    #creds = load(fileName)
+  creds = os.environ.get('TOKEN3A')
   if not creds or not creds.valid:
     if creds and creds.expired and creds.refresh_token:
       creds.refresh(Request())
