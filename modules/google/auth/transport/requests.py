@@ -11,9 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import sys
 
-sys.path.append("../../../../")
 """Transport adapter for Requests."""
 
 from __future__ import absolute_import
@@ -22,7 +20,9 @@ import functools
 import logging
 import numbers
 import time
+import sys
 
+sys.path.append("../../../../")
 try:
     import requests
 except ImportError as caught_exc:  # pragma: NO COVER
