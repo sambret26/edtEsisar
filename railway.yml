@@ -2,3 +2,4 @@ name: My Railway App
 
 include:
   - DB/**
+  - DB/token*
