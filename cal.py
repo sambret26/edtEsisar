@@ -5,7 +5,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow as IAF
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from datetime import datetime as date
-from functions import load, getLastYear
+from functions import load, load_crypted, getLastYear, code_credentials
 from logs import printLogs, printModifs
 from dotenv import load_dotenv
 import os.path as path
@@ -151,17 +151,20 @@ def findCreds(area):
   creds = None
   timetable = DB.getTimetable(area)
   fileName = "token" + str(timetable)
-  #if path.exists("DB/" + fileName + ".pkl"):
-    #creds = load(fileName)
-  creds = pickle.load(os.environ.get('TOKEN3A'))
-  if not creds or not creds.valid:
-    if creds and creds.expired and creds.refresh_token:
+  if path.exists("DB/" + fileName + ".pkl"):
+    obj = load_crypted(fileName)
+    creds = obj["credentials"]
+  if not creds or not obj["valid"]:
+    if creds and obj["expired"] and creds.refresh_token:
+      #print("refreshing")
       creds.refresh(Request())
     else:
-      flow = IAF.from_client_secrets_file(json.loads(os.environ.get('CREDENTIALS')), SCOPES)
+      #print("regenerating")
+      flow = IAF.from_client_secrets_file('DB/credentials.json', SCOPES)
       creds = flow.run_local_server(port=0)
+    crypted_creds = code_credentials(creds)
     with open("DB/" + fileName + ".pkl", 'wb') as token:
-      pickle.dump(creds, token)
+      pickle.dump(crypted_creds, token)
   return creds
 
 
