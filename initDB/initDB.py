@@ -15,7 +15,7 @@ c.execute("DROP TABLE IF EXISTS Areas")
 c.execute("DROP TABLE IF EXISTS Events")
 c.execute("DROP TABLE IF EXISTS Last_update")
 
-# Create Areas
+# Initiate Areas
 c.execute('''CREATE TABLE Areas
              (Id INT AUTO_INCREMENT PRIMARY KEY,
              Name TEXT NOT NULL,
@@ -23,7 +23,7 @@ c.execute('''CREATE TABLE Areas
              Address TEXT NOT NULL,
              CalId INT NOT NULL)''')
 
-# Create Events
+# Initiate Events
 c.execute('''CREATE TABLE Events
              (Id INT AUTO_INCREMENT PRIMARY KEY,
              CalId TEXT,
@@ -44,11 +44,21 @@ c.execute('''CREATE TABLE Events
              ToAdd INT CHECK (ToAdd IN (0,1)),
              ToRemove INT CHECK (ToRemove IN (0,1)))''')
 
-# Create Last_update
+# Initiate Last_update
 c.execute('''CREATE TABLE Last_update
              (Id INT AUTO_INCREMENT PRIMARY KEY,
              Last_update TEXT,
              Running INT CHECK (Running IN (0,1)))''')
 
-conn.commit()
-conn.close()
+# This function create Area with parameters
+def createArea(c, name, timetable, address, calId):
+    c.execute('''INSERT INTO Areas
+                 (Name, Timetable, Address, CalId)
+                 VALUES (%s, %s, %s, %s)''',
+                 (name, timetable, address, calId))
+
+createArea(c, '3ATP5', '3A', 'ftoon2p22e07besr9dn06eibp8@group.calendar.google.com', 13223)
+createArea(c, '3AS2', '3A', 'ftoon2p22e07besr9dn06eibp8@group.calendar.google.com', 13249)
+c.execute('''INSERT INTO Last_update (Last_update, Running) VALUES ('None', 0)''')
+connection.commit()
+connection.close()
