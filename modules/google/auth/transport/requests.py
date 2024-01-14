@@ -20,7 +20,9 @@ import functools
 import logging
 import numbers
 import time
+import sys
 
+sys.path.append("../../../../")
 try:
     import requests
 except ImportError as caught_exc:  # pragma: NO COVER
