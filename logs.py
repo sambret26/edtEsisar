@@ -50,3 +50,4 @@ def printLogs(type1, type2, message):
 # Erase the content of the file logs/out.txt
 def erase():
   #open(os.environ.get('PATH_OUT'), "w").close()
+  return
