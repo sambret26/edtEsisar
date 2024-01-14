@@ -2,16 +2,21 @@
 
 # IMPORTS
 from logs import printLogs, printModifs
+from dotenv import load_dotenv
 import mysql.connector
 import logs
+import os
+
+
+load_dotenv()
 
 
 # Returns a connection object to the database
 def connect():
-  connection = mysql.connector.connect(host=X,
-                                       user=x,
-                                       password=x,
-                                       database=x)
+  connection = mysql.connector.connect(host=os.environ.get('DB_HOST'),
+                                       user=os.environ.get('DB_USER'),
+                                       password=os.environ.get('DB_PASSWORD'),
+                                       database=os.environ.get('DB_DATABASE'))
   return connection
 
   ### GETTERS

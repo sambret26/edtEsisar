@@ -7,11 +7,16 @@ from googleapiclient.discovery import build
 from datetime import datetime as date
 from functions import load, getLastYear
 from logs import printLogs, printModifs
+from dotenv import load_dotenv
 import os.path as path
 import urllib3 as url
 import pickle
 import logs
+import os
 import DB
+
+
+load_dotenv()
 
 
 # Params :
@@ -159,4 +164,4 @@ def findCreds(area):
 
 
 # Data necessary to create/refresh creds for calendars
-SCOPES = ['https://www.googleapis.com/auth/calendar']
+SCOPES = [os.environ.get('SCOPES')]

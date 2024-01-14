@@ -2,16 +2,22 @@
 
 # IMPORTS
 from functions import getCurrentDate
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
+
 
 # CONST
 
-MAJ = "[MAJ]"
-DB = "[DB ]"
-CAL = "[CAL]"
+MAJ = os.environ.get('MAJ')
+DB = os.environ.get('DB')
+CAL = os.environ.get('CAL')
 
-INFO = "[INFO ]"
-WARN = "[WARN ]"
-ERROR = "[ERROR]"
+INFO = os.environ.get('INFO')
+WARN = os.environ.get('WARN')
+ERROR = os.environ.get('ERROR')
 
 
 # Print the date and the message on the files logs/out.txt and logs/logs.txt
@@ -19,7 +25,7 @@ def printFormat(message):
   printLogs(MAJ, INFO, message)
   currentDate = str(getCurrentDate().strftime("%d/%m %Hh%M"))
   formattedMessage = "{} : {}\n".format(currentDate, message)
-  with open("./logs/out.txt", 'a') as f:
+  with open(os.environ.get('PATH_OUT'), 'a') as f:
     f.write(formattedMessage)
 
 
@@ -28,7 +34,7 @@ def printModifs(type1, type2, message):
   printLogs(type1, type2, message)
   currentDate = str(getCurrentDate().strftime("%d/%m %Hh%M"))
   formattedMessage = "{} : {}\n".format(currentDate, message)
-  with open("./logs/modifs.txt", 'a') as f:
+  with open(os.environ.get('PATH_MODIFS'), 'a') as f:
     f.write(formattedMessage)
 
 
@@ -37,10 +43,10 @@ def printLogs(type1, type2, message):
   currentDate = str(getCurrentDate().strftime("%d/%m %Hh%M"))
   formattedMessage = "{} : {} {} {}\n".format(currentDate, type1, type2,
                                               message)
-  with open("./logs/logs.txt", 'a') as f:
+  with open(os.environ.get('PATH_LOGS'), 'a') as f:
     f.write(formattedMessage)
 
 
 # Erase the content of the file logs/out.txt
 def erase():
-  open("./logs/out.txt", "w").close()
+  open(os.environ.get('PATH_OUT'), "w").close()
