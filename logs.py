@@ -25,8 +25,8 @@ def printFormat(message):
   printLogs(MAJ, INFO, message)
   currentDate = str(getCurrentDate().strftime("%d/%m %Hh%M"))
   formattedMessage = "{} : {}\n".format(currentDate, message)
-  with open(os.environ.get('PATH_OUT'), 'a') as f:
-    f.write(formattedMessage)
+  #with open(os.environ.get('PATH_OUT'), 'a') as f:
+    #f.write(formattedMessage)
 
 
 # Print the date and the message on the files logs/modifs.txt and logs/logs.txt
@@ -34,8 +34,8 @@ def printModifs(type1, type2, message):
   printLogs(type1, type2, message)
   currentDate = str(getCurrentDate().strftime("%d/%m %Hh%M"))
   formattedMessage = "{} : {}\n".format(currentDate, message)
-  with open(os.environ.get('PATH_MODIFS'), 'a') as f:
-    f.write(formattedMessage)
+  #with open(os.environ.get('PATH_MODIFS'), 'a') as f:
+    #f.write(formattedMessage)
 
 
 # Print the date and the message on the file logs/logs.txt
@@ -43,10 +43,10 @@ def printLogs(type1, type2, message):
   currentDate = str(getCurrentDate().strftime("%d/%m %Hh%M"))
   formattedMessage = "{} : {} {} {}\n".format(currentDate, type1, type2,
                                               message)
-  with open(os.environ.get('PATH_LOGS'), 'a') as f:
-    f.write(formattedMessage)
+  #with open(os.environ.get('PATH_LOGS'), 'a') as f:
+    #f.write(formattedMessage)
 
 
 # Erase the content of the file logs/out.txt
 def erase():
-  open(os.environ.get('PATH_OUT'), "w").close()
+  #open(os.environ.get('PATH_OUT'), "w").close()
