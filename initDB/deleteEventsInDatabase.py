@@ -1,8 +1,11 @@
-import sqlite3
+import mysql.connector
 
-conn = sqlite3.connect('DB.db')
-c = conn.cursor()
+connection = mysql.connector.connect(host=X,
+                                     user=x,
+                                     password=x,
+                                     database=x)
+c = connection.cursor()
 
 c.execute("DELETE FROM Events")
-conn.commit()
-conn.close()
+connection.commit()
+connection.close()
