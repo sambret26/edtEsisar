@@ -11,9 +11,9 @@ import time
 import os
 
 # KEEPING ALIVE (en cas de deploiement sur replit)
-if "REPLIT" in os.environ:
-  import keep_alive
-  keep_alive.keep_alive()
+# if "REPLIT" in os.environ:
+#   import keep_alive
+#   keep_alive.keep_alive()
 
 
 # RECURING TASKS
