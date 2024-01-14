@@ -324,3 +324,25 @@ def addEvent(area, event):
   cursor.execute(query, values)
   connection.commit()
   connection.close()
+
+
+# This function update the value of the table Last_update with current date, and set Running flag to 1
+def startRunning(currentDate):
+  connection = connect()
+  cursor = connection.cursor()
+  query = "UPDATE Last_update SET Last_update = %s, Running = %s WHERE Id = %s"
+  values = (currentDate, 1, 1)
+  cursor.execute(query, values)
+  connection.commit()
+  connection.close()
+
+
+# This function update the value of the table Last_update with current date, and set Running flag to 0
+def endRunning(currentDate):
+  connection = connect()
+  cursor = connection.cursor()
+  query = "UPDATE Last_update SET Last_update = %s, Running = %s WHERE Id = %s"
+  values = (currentDate, 0, 1)
+  cursor.execute(query, values)
+  connection.commit()
+  connection.close()

@@ -13,6 +13,7 @@ import DB
 # Each thread call the run function to update the given area
 def update():
   printLogs(logs.MAJ, logs.INFO, "Update")
+  DB.startRunning(getCurrentDate())
   areaList = DB.getAreaList()
   threads = []
   for area in areaList:
@@ -21,6 +22,7 @@ def update():
     thread.start()
   for thread in threads:
     thread.join()
+  DB.endRunning(getCurrentDate())
   printLogs(logs.MAJ, logs.INFO, "End of update\n")
 
 

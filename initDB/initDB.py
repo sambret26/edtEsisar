@@ -13,6 +13,7 @@ c = connection.cursor()
 # Drop all tables if exists
 c.execute("DROP TABLE IF EXISTS Areas")
 c.execute("DROP TABLE IF EXISTS Events")
+c.execute("DROP TABLE IF EXISTS Last_update")
 
 # Create Areas
 c.execute('''CREATE TABLE Areas
@@ -42,6 +43,12 @@ c.execute('''CREATE TABLE Events
              Find INT CHECK (Find IN (0,1)),
              ToAdd INT CHECK (ToAdd IN (0,1)),
              ToRemove INT CHECK (ToRemove IN (0,1)))''')
+
+# Create Last_update
+c.execute('''CREATE TABLE Last_update
+             (Id INT AUTO_INCREMENT PRIMARY KEY,
+             Last_update TEXT,
+             Running INT CHECK (Running IN (0,1)))''')
 
 conn.commit()
 conn.close()
