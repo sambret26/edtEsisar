@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 import os.path as path
 import urllib3 as url
 import pickle
+import json
 import logs
 import os
 import DB
@@ -156,7 +157,7 @@ def findCreds(area):
     if creds and creds.expired and creds.refresh_token:
       creds.refresh(Request())
     else:
-      flow = IAF.from_client_secrets_file(os.environ.get('CREDENTIALS'), SCOPES)
+      flow = IAF.from_client_secrets_file(json.loads(os.environ.get('CREDENTIALS'), SCOPES))
       creds = flow.run_local_server(port=0)
     with open("DB/" + fileName + ".pkl", 'wb') as token:
       pickle.dump(creds, token)
