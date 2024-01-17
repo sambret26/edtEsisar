@@ -23,19 +23,19 @@ BUILTIN_CA_CERTS = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 
 
 def where():
-  return "/home/runner/edtEsisar/ca-certificates.crt"
   env = os.environ.get("HTTPLIB2_CA_CERTS")
   if env is not None:
     if os.path.isfile(env):
       return env
-    else:
-      raise RuntimeError(
-        "Environment variable HTTPLIB2_CA_CERTS not a valid file")
-  if custom_ca_locater_available:
-    return custom_ca_locater_where()
-  if certifi_available:
-    return certifi_where()
-  return BUILTIN_CA_CERTS
+  return "/home/runner/edtEsisar/ca-certificates.crt"
+  #   else:
+  #     raise RuntimeError(
+  #       "Environment variable HTTPLIB2_CA_CERTS not a valid file")
+  # if custom_ca_locater_available:
+  #   return custom_ca_locater_where()
+  # if certifi_available:
+  #   return certifi_where()
+  # return BUILTIN_CA_CERTS
 
 
 if __name__ == "__main__":
