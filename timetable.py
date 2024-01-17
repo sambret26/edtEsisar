@@ -172,7 +172,7 @@ def deleteEvents(area):
   events = DB.getCalIdUnfind(area)
   for calId in events:
     if calId == "None" or cal.deleteEvent(area, calId):
-      DB.deleteEvent(area, calId)
+      DB.deleteEventByCalId(area, calId)
 
 
 # This function retrieves all pasts events within a specified area (indicated by 'ToRemove = 1')
@@ -355,8 +355,8 @@ def updateDatabaseFromCalendar(area):
     newEvent = {"End": ed, "Id": id}
     if isOver(newEvent):
       cal.deleteEvent(area, newEvent["Id"])
-  listCalId = DB.getMissingEvents(area)
+  listId = DB.getMissingEvents(area)
   printLogs(logs.MAJ, logs.INFO,
-            "Number of missing events : {}".format(len(listCalId)))
-  for calId in listCalId:
-    DB.deleteEvent(area, calId)
+            "Number of missing events : {}".format(len(listId)))
+  for id in listId:
+    DB.deleteEventById(area, id)

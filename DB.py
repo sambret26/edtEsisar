@@ -87,7 +87,8 @@ def getTypes(area):
   cursor = connection.cursor()
   query = "SELECT DISTINCT(Type) FROM Events WHERE Area = %s"
   values = (area, )
-  types = cursor.execute(query, values).fetchall()
+  cursor.execute(query, values)
+  types = cursor.fetchall()
   connection.close()
   return types
 
@@ -153,7 +154,21 @@ def getCalId(area):
 
 
 # Returns some informations of the events with the given calId in a given area
-def getInfo(area, calId):
+def getInfoById(area, id):
+  connection = connect()
+  cursor = connection.cursor()
+  query = "SELECT Id, Start, End, Subject, Description, Color, Number, Total FROM Events WHERE (Id, Area) = (%s, %s)"
+  if area.startswith("3A"):
+    query = "SELECT Id, Start, End, Type, Description, Color, Number, Total FROM Events WHERE (Id, Area) = (%s, %s)"
+  values = (id, area)
+  cursor.execute(query, values)
+  data = cursor.fetchone()
+  connection.close()
+  return data
+
+
+# Returns some informations of the events with the given calId in a given area
+def getInfoByCalId(area, calId):
   connection = connect()
   cursor = connection.cursor()
   query = "SELECT Id, Start, End, Subject, Description, Color, Number, Total FROM Events WHERE (CalId, Area) = (%s, %s)"
@@ -170,12 +185,12 @@ def getInfo(area, calId):
 def getMissingEvents(area):
   connection = connect()
   cursor = connection.cursor()
-  query = "SELECT CalId FROM Events WHERE (Area, Find, Past) = (%s, %s, %s)"
+  query = "SELECT Id FROM Events WHERE (Area, Find, Past) = (%s, %s, %s)"
   values = (area, 0, 0)
   cursor.execute(query, values)
-  listCalId = [event[0] for event in cursor.fetchall()]
+  listId = [event[0] for event in cursor.fetchall()]
   connection.commit()
-  return listCalId
+  return listId
 
 
 # This function look if there is an event with given field in the database
@@ -293,12 +308,24 @@ def setPastToRemoveCalId(calId):
 
 
 # This function delete a given event of the database
-def deleteEvent(area, calId):
-  datas = getInfo(area, calId)
+def deleteEventByCalId(area, calId):
+  datas = getInfoByCalId(area, calId)
   connection = connect()
   cursor = connection.cursor()
   query = "DELETE FROM Events WHERE (CalId, Area) = (%s, %s)"
   values = (calId, area)
+  cursor.execute(query, values)
+  connection.commit()
+  printModifs(logs.DB, logs.INFO, "Deleting {} {}".format(datas[3], datas[1]))
+
+
+# This function delete a given event of the database
+def deleteEventById(area, id):
+  datas = getInfoById(area, id)
+  connection = connect()
+  cursor = connection.cursor()
+  query = "DELETE FROM Events WHERE (Id, Area) = (%s, %s)"
+  values = (id, area)
   cursor.execute(query, values)
   connection.commit()
   printModifs(logs.DB, logs.INFO, "Deleting {} {}".format(datas[3], datas[1]))
