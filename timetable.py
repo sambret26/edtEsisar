@@ -325,6 +325,7 @@ def updateDatabaseFromCalendar(area):
   DB.setCurrentEventsToUnfind(area)
   listEventsOnCalendar = cal.getCalendarEvents(area)
   listEventsOnDatabase = DB.getCalId(area)
+  eventsToSetFindIds = []
   for calEvent in listEventsOnCalendar:
     if calEvent["id"] in listEventsOnDatabase:
       (id, sd2, ed2, s2, d, c2, n, t) = DB.getInfoByCalId(area, calEvent["id"])
@@ -350,13 +351,14 @@ def updateDatabaseFromCalendar(area):
         calEvent["start"]["dateTime"] = sd2
         calEvent["end"]["dateTime"] = ed2
         cal.updateEvent(area, calEvent)
-      DB.setEventToFind(id, calEvent["id"])
+      eventsToSetFindIds.append(id)
       continue
     ed = calEvent["end"]["dateTime"][0:19]
     id = calEvent["id"]
     newEvent = {"End": ed, "Id": id}
     if isOver(newEvent):
       cal.deleteEvent(area, newEvent["Id"])
+  DB.setEventsToFind(eventsToSetFindIds)
   listId = DB.getMissingEvents(area)
   printLogs(logs.MAJ, logs.INFO,
             "Number of missing events : {}".format(len(listId)))
