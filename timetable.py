@@ -325,7 +325,7 @@ def updateDatabaseFromCalendar(area):
   listEventsOnDatabase = DB.getCalId(area)
   for calEvent in listEventsOnCalendar:
     if calEvent["id"] in listEventsOnDatabase:
-      (id, sd2, ed2, s2, d, c2, n, t) = DB.getInfo(area, calEvent["id"])
+      (id, sd2, ed2, s2, d, c2, n, t) = DB.getInfoByCalId(area, calEvent["id"])
       #if s2.startswith("Exam "): s2 = s2[5:]
       c2 = str(c2)
       if t != 0:
