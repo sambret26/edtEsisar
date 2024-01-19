@@ -242,14 +242,13 @@ def setCurrentEventsToUnfind(area):
   connection.close()
 
 
-# This function set flag Find to 1 for the given event
-def setEventToFind(id, calId):
-  #printLogs(logs.DB, logs.INFO, "Setting Find = 1 at {}".format(calId))
+# This function set flag Find to 1 for the given events
+def setEventsToFind(listId):
   connection = connect()
   cursor = connection.cursor()
-  query = "UPDATE Events SET Find = 1 WHERE (Find, Id) = (%s, %s)"
-  values = (0, str(id))
-  cursor.execute(query, values)
+  values = ', '.join(['%s'] * len(listId))
+  query = f"UPDATE Events SET Find = 1 WHERE Id In ({values})"
+  cursor.execute(query, listId)
   connection.commit()
   connection.close()
 

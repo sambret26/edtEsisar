@@ -71,6 +71,7 @@ def updateCalendar(area):
 # Every new event is add in database and flag with ToAdd = 1
 def browseEvents(eventsList, area):
   printLogs(logs.MAJ, logs.INFO, "Browsing events for {}".format(area))
+  eventsToSetFindIds = []
   for calEvent in eventsList:
     values = calEvent.split("\n")
     event = {
@@ -105,7 +106,8 @@ def browseEvents(eventsList, area):
     if not id:
       DB.addEvent(area, event)
     else:
-      DB.setEventToFind(id, calId)
+      eventsToSetFindIds.append(id)
+  DB.setEventsToFind(eventsToSetFindIds)
 
 
 # This function change the status of completed event always in the calendar
