@@ -35,7 +35,7 @@ def update():
 def run(area):
   printLogs(logs.MAJ, logs.INFO, "Update {}".format(area))
   urlId = DB.getId(area)
-  #updateDatabaseFromCalendar(area)
+  updateDatabaseFromCalendar(area)
   eventsList = cal.getEvents(urlId)
   if eventsList != [] and not "invalid" in eventsList[0]:
     updateDatabase(eventsList, area)
