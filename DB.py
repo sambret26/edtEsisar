@@ -222,10 +222,10 @@ def setNumbers(events):
 def setToAdd(events):
   for event in events :
       printModifs(logs.DB, logs.INFO,
-                  "Setting CalId = {}, ToAdd = 0".format(event['calId']))
+                  "Setting CalId = {}, ToAdd = 0, Find = 1".format(event['calId']))
   connection = connect()
   cursor = connection.cursor()
-  query = "UPDATE Events SET CalId = %s, ToAdd = 0 WHERE Id = %s"
+  query = "UPDATE Events SET CalId = %s, ToAdd = 0, Find = 1 WHERE Id = %s"
   values = [(event['calId'], event['id']) for event in events]
   cursor.executemany(query, values)
   connection.commit()

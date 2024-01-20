@@ -377,7 +377,7 @@ def updateDatabaseFromCalendar(area):
       if isOver(newEvent):
         cal.deleteEvent(area, newEvent["Id"])
   if eventsToSetFindIds != [] : DB.setEventsToFind(eventsToSetFindIds)
-  events = DB.getMissingEvents(area['Name'])
-  printLogs(logs.MAJ, logs.INFO,
-            "[{}] Number of missing events : {}".format(area['Name'].center(5), len(events)))
-  if events != [] : DB.deleteEventsById(area['Name'], events)
+  # events = DB.getMissingEvents(area['Name'])
+  # printLogs(logs.MAJ, logs.INFO,
+  #           "[{}] Number of missing events : {}".format(area['Name'].center(5), len(events)))
+  # if events != [] : DB.deleteEventsById(area['Name'], events)
