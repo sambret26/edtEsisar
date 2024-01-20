@@ -114,9 +114,9 @@ def getMissingEvents(area):
   query = "SELECT Id, Start, Subject FROM Events WHERE (Area, Find, Past) = (%s, %s, %s)"
   values = (area, 0, 0)
   cursor.execute(query, values)
-  listId = [event[0] for event in cursor.fetchall()]
+  events = cursor.fetchall()
   connection.commit()
-  return listId
+  return events
 
 
 # Returns calId of every events flaged with find = 0 in a given area
@@ -126,7 +126,7 @@ def getCalIdStartSubjectUnfind(area):
   query = "SELECT CalId, Start, Subject FROM Events WHERE (Find, Area) = (%s, %s)"
   values = (0, area)
   cursor.execute(query, values)
-  events = [row[0] for row in cursor.fetchall()]
+  events = cursor.fetchall()
   connection.close()
   return events
 
