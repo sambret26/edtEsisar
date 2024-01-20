@@ -14,7 +14,6 @@ import pickle
 import json
 import logs
 import os
-import DB
 
 
 load_dotenv()
@@ -30,8 +29,8 @@ def deleteEvent(area, calId, retry=5):
   if retry == 0:
     printModifs(logs.CAL, logs.ERROR, "Error deleting {}".format(calId))
     return False
-  calendarId = DB.getCalendarId(area)
-  service = build('calendar', 'v3', credentials=findCreds(area))
+  calendarId = area['Address']
+  service = build('calendar', 'v3', credentials=findCreds(area['Timetable']))
   try:
     service.events().delete(calendarId=calendarId, eventId=calId).execute()
     printModifs(logs.CAL, logs.INFO, "Deleted {}".format(calId))
@@ -43,15 +42,14 @@ def deleteEvent(area, calId, retry=5):
 
 
 # Params :
-# urlId : The id of the calendar in grenoble-inp.
-# area : The area, for logs
+# area : The area
 # Returns :
 # A list of event read on ginp.
 # Could be [] or "invalid" in case of fail (between 1am to 2am)
-def getEvents(urlId, area):
-  printLogs(logs.MAJ, logs.INFO, "[{}] Fetching event on id {}".format(area.center(5), urlId))
+def getEvents(area):
+  printLogs(logs.MAJ, logs.INFO, "[{}] Fetching event on id {}".format(area['Name'].center(5), area['CalId']))
   inpUrl = 'https://edt.grenoble-inp.fr/directCal/2023-2024/etudiant/esisar?resources=' + str(
-    urlId
+    area['CalId']
   ) + '&startDay=28&startMonth=08&startYear=2023&endDay=30&endMonth=07&endYear=2024'
   headers = load("tokenAgalan")
   r = url.PoolManager().request('GET', inpUrl, headers=headers)
@@ -73,9 +71,9 @@ def createEvent(area, event, retry=5):
       "Error creating {} on {}".format(event["Subject"], event["Start"]))
     return False
   try:
-    calendarId = DB.getCalendarId(area)
+    calendarId = area['Address']
     timezone = "Europe/Paris"
-    service = build('calendar', 'v3', credentials=findCreds(area))
+    service = build('calendar', 'v3', credentials=findCreds(area['Timetable']))
     if event["Total"] < 2: description = event["Description"]
     else:
       description = "{} ({}/{})".format(event["Description"], event["Number"],
@@ -119,8 +117,8 @@ def updateEvent(area, event, retry=5):
     printModifs(logs.CAL, logs.ERROR, "Error updating {}".format(calId))
     return
   try:
-    calendarId = DB.getCalendarId(area)
-    service = build('calendar', 'v3', credentials=findCreds(area))
+    calendarId = area['Address']
+    service = build('calendar', 'v3', credentials=findCreds(area['Timetable']))
     service.events().update(calendarId=calendarId, eventId=calId,
                             body=event).execute()
     printModifs(logs.CAL, logs.INFO, "Updated {}".format(calId))
@@ -132,9 +130,9 @@ def updateEvent(area, event, retry=5):
 
 # Returns all the events find in google calendar, associated with the given area
 def getCalendarEvents(area):
-  printLogs(logs.CAL, logs.INFO, "[{}] Fetching all events".format(area.center(5)))
-  calendarId = DB.getCalendarId(area)
-  credentials = findCreds(area)
+  printLogs(logs.CAL, logs.INFO, "[{}] Fetching all events".format(area['Name'].center(5)))
+  calendarId = area['Address']
+  credentials = findCreds(area['Timetable'])
   service = build('calendar', 'v3', credentials=credentials)
   now = date.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
   lastYear = getLastYear(now)
@@ -148,9 +146,8 @@ def getCalendarEvents(area):
 
 
 # Loads the creads associated with the given area
-def findCreds(area):
+def findCreds(timetable):
   creds = None
-  timetable = DB.getTimetable(area)
   fileName = "token" + str(timetable)
   if path.exists("DB/" + fileName + ".pkl"):
     obj = load_crypted(fileName)

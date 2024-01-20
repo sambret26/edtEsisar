@@ -26,47 +26,11 @@ def connect():
 def getAreaList():
   connection = connect()
   cursor = connection.cursor()
-  query = "SELECT Name FROM Areas"
+  query = "SELECT Name, Timetable, Address, CalId FROM Areas"
   cursor.execute(query)
-  areaList = [row[0] for row in cursor.fetchall()]
+  areaList = [{'Name' : row[0], 'Timetable' : row[1], 'Address' : row[2], 'CalId' : row[3]} for row in cursor.fetchall()]
   connection.close()
   return areaList
-
-
-# Returns the address of the calendar associated with the given area
-def getCalendarId(area):
-  connection = connect()
-  cursor = connection.cursor()
-  query = "SELECT Address FROM Areas WHERE Name = %s"
-  values = (area, )
-  cursor.execute(query, values)
-  calendarId = cursor.fetchone()[0]
-  connection.close()
-  return calendarId
-
-
-# Returns the timetable with the given area
-def getTimetable(area):
-  connection = connect()
-  cursor = connection.cursor()
-  query = "SELECT Timetable FROM Areas WHERE Name = %s"
-  values = (area, )
-  cursor.execute(query, values)
-  timetable = cursor.fetchone()[0]
-  connection.close()
-  return timetable
-
-
-# Returns the ginp ID associated with the given area
-def getId(area):
-  connection = connect()
-  cursor = connection.cursor()
-  query = "SELECT calId FROM Areas WHERE Name = %s"
-  values = (area, )
-  cursor.execute(query, values)
-  calId = cursor.fetchone()[0]
-  connection.close()
-  return calId
 
 
 # Returns the Id, CalId, Past and SimplyEnd of every events in the given area

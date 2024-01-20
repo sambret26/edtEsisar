@@ -33,14 +33,13 @@ def update():
 # 3) Update the database with those events (updateDatabase)
 # 4) Update the calendar with the database (updateCalendar)
 def run(area):
-  printLogs(logs.MAJ, logs.INFO, "[{}] Update".format(area.center(5)))
-  urlId = DB.getId(area)
+  printLogs(logs.MAJ, logs.INFO, "[{}] Update".format(area['Name'].center(5)))
   updateDatabaseFromCalendar(area)
-  eventsList = cal.getEvents(urlId, area)
+  eventsList = cal.getEvents(area)
   if eventsList != [] and not "invalid" in eventsList[0]:
-    updateDatabase(eventsList, area)
+    updateDatabase(eventsList, area['Name'])
   updateCalendar(area)
-  printLogs(logs.MAJ, logs.INFO, "[{}] End of update".format(area.center(5)))
+  printLogs(logs.MAJ, logs.INFO, "[{}] End of update".format(area['Name'].center(5)))
 
 
 # This is the 3rd step of the "run" function
@@ -49,11 +48,11 @@ def run(area):
 # 2) Browse all events and see if there are in database
 # 3) Set flags Past = 1 for completed events
 # 4) Add the number of events in database
-def updateDatabase(eventsList, area):
-  DB.setEventsToUnfind(area)
-  browseEvents(eventsList, area)
-  checkPastEvents(area)
-  addNumber(area)
+def updateDatabase(eventsList, areaName):
+  DB.setEventsToUnfind(areaName)
+  browseEvents(eventsList, areaName)
+  checkPastEvents(areaName)
+  addNumber(areaName)
 
 
 # This is the 4th step of the "run" function
@@ -69,8 +68,8 @@ def updateCalendar(area):
 
 # This function flaged Find = 1 to event already in calendar
 # Every new event is add in database and flag with ToAdd = 1
-def browseEvents(eventsList, area):
-  printLogs(logs.MAJ, logs.INFO, "[{}] Browsing events".format(area.center(5)))
+def browseEvents(eventsList, areaName):
+  printLogs(logs.MAJ, logs.INFO, "[{}] Browsing events".format(areaName.center(5)))
   eventsToSearch = []
   eventsToSetFindIds = []
   eventsToAdd = []
@@ -105,23 +104,23 @@ def browseEvents(eventsList, area):
     event["End"] = realDate(end)
     event["SimplyEnd"] = end
     eventsToSearch.append(event)
-  ids = DB.searchIdsInDatabase(area, eventsToSearch)
+  ids = DB.searchIdsInDatabase(areaName, eventsToSearch)
   for id in ids :
     if not id:
       eventsToAdd.append(event)
     else:
       eventsToSetFindIds.append(id)
-  if eventsToAdd != [] : DB.addEvents(area, eventsToAdd)
+  if eventsToAdd != [] : DB.addEvents(areaName, eventsToAdd)
   if eventsToSetFindIds != [] : DB.setEventsToFind(eventsToSetFindIds)
 
 
 # This function change the status of completed event always in the calendar
 # If the "Past" flag is not set but the event is completed, this flag is set
 # If this event is always in calendar, it is flag with ToRemove = 1
-def checkPastEvents(area):
-  printLogs(logs.MAJ, logs.INFO, "[{}] Checking past events".format(area.center(5)))
+def checkPastEvents(areaName):
+  printLogs(logs.MAJ, logs.INFO, "[{}] Checking past events".format(areaName.center(5)))
   currentDate = int(getCurrentDate().strftime("%y%m%d%H%M"))
-  events = DB.getIdCalIdPastSimplyEnd(area)
+  events = DB.getIdCalIdPastSimplyEnd(areaName)
   eventsToRemoveToAdd = []
   for event in events:
     if not (event[2]) and int(event[3]) <= currentDate:
@@ -136,12 +135,12 @@ def checkPastEvents(area):
 # All type founds are selected (ex of type : "CM MA202"/"TP EE312")
 # Every event of eah type are sorted, and a number is add
 # It allows to put something like : "2/26" in the description of the event
-def addNumber(area):
-  printLogs(logs.MAJ, logs.INFO, "[{}] Adding number".format(area.center(5)))
-  types = DB.getTypes(area)
+def addNumber(areaName):
+  printLogs(logs.MAJ, logs.INFO, "[{}] Adding number".format(areaName.center(5)))
+  types = DB.getTypes(areaName)
   eventsToSetNumber = []
   for type in types:
-    values = (type[0], area)
+    values = (type[0], areaName)
     events = DB.getIdSimplyEnd(values)
     sortedEvents = sorted(events, key=lambda sub: (sub[1]))
     total = len(sortedEvents)
@@ -156,8 +155,8 @@ def addNumber(area):
 # This function retrieves all events to create within a specified area (indicated by 'ToAdd = 1')
 # All thoses events are create in the calendar ans the new Id is store in database
 def insertEvents(area):
-  printLogs(logs.MAJ, logs.INFO, "[{}] Inserting events".format(area.center(5)))
-  events = DB.getEventsToAdd(area)
+  printLogs(logs.MAJ, logs.INFO, "[{}] Inserting events".format(area['Name'].center(5)))
+  events = DB.getEventsToAdd(area['Name'])
   sortedEvents = sorted(events, key=lambda sub: (sub[5]))
   eventsToSetToAdd = []
   for event in sortedEvents:
@@ -183,20 +182,20 @@ def insertEvents(area):
 # This function retrieves all canceled events within a specified area (indicated by 'Find = 0')
 # All thoses events are removed from calendar (if they are in) AND database
 def deleteEvents(area):
-  printLogs(logs.MAJ, logs.INFO, "[{}] Deleting events".format(area.center(5)))
-  events = DB.getCalIdStartSubjectUnfind(area)
+  printLogs(logs.MAJ, logs.INFO, "[{}] Deleting events".format(area['Name'].center(5)))
+  events = DB.getCalIdStartSubjectUnfind(area['Name'])
   eventsToDelete = []
   for event in events:
     if event[0] == "None" or cal.deleteEvent(area, event[0]):
       eventsToDelete.append(event)
-  if eventsToDelete != [] : DB.deleteEventsByCalId(area, eventsToDelete)
+  if eventsToDelete != [] : DB.deleteEventsByCalId(area['Name'], eventsToDelete)
 
 
 # This function retrieves all pasts events within a specified area (indicated by 'ToRemove = 1')
 # All thoses events are remove from calendar and Flaged with Past =  and CalId = "None" in database
 def removePastEvents(area):
-  printLogs(logs.MAJ, logs.INFO, "[{}] Removing pasts events".format(area.center(5)))
-  events = DB.getIdCalIdToRemove(area)
+  printLogs(logs.MAJ, logs.INFO, "[{}] Removing pasts events".format(area['Name'].center(5)))
+  events = DB.getIdCalIdToRemove(area['Name'])
   eventsToUpdate = []
   for event in events:
     if cal.deleteEvent(area, event[1]):
@@ -311,7 +310,7 @@ def changeDate(date):
   after = str(date[13:19])
   new = str(int(during) + 1)
   if len(new) == 1: new = '0' + new
-  newDate = "{}{}{}".format(before, during, after)  # TODO
+  newDate = "{}{}{}".format(before, during, after)
   return newDate
 
 
@@ -338,10 +337,10 @@ def isOver(event):
 # If not, nothing happend.
 # Maybe a good idea to put it in db ? Let's thing about it ...
 def updateDatabaseFromCalendar(area):
-  printLogs(logs.MAJ, logs.INFO, "[{}] Updating in reverse".format(area.center(5)))
-  DB.setCurrentEventsToUnfind(area)
+  printLogs(logs.MAJ, logs.INFO, "[{}] Updating in reverse".format(area['Name'].center(5)))
+  DB.setCurrentEventsToUnfind(area['Name'])
   listEventsOnCalendar = cal.getCalendarEvents(area)
-  listEventsOnDatabase = DB.getInfosByArea(area) #TODO
+  listEventsOnDatabase = DB.getInfosByArea(area['Name'])
   eventsToSetFindIds = []
   for calEvent in listEventsOnCalendar:
     #if calEvent["id"] in listEventsOnDatabase:
@@ -378,7 +377,7 @@ def updateDatabaseFromCalendar(area):
       if isOver(newEvent):
         cal.deleteEvent(area, newEvent["Id"])
   if eventsToSetFindIds != [] : DB.setEventsToFind(eventsToSetFindIds)
-  events = DB.getMissingEvents(area)
+  events = DB.getMissingEvents(area['Name'])
   printLogs(logs.MAJ, logs.INFO,
-            "[{}] Number of missing events : {}".format(area.center(5), len(events)))
-  if events != [] : DB.deleteEventsById(area, events)
+            "[{}] Number of missing events : {}".format(area['Name'].center(5), len(events)))
+  if events != [] : DB.deleteEventsById(area['Name'], events)
