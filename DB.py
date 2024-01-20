@@ -129,20 +129,6 @@ def getIdCalIdToRemove(area):
   return events
 
 
-# Returns some informations of the events with the given calId in a given area
-def getInfoById(area, id):
-  connection = connect()
-  cursor = connection.cursor()
-  query = "SELECT Id, Start, End, Subject, Description, Color, Number, Total FROM Events WHERE (Id, Area) = (%s, %s)"
-  if area.startswith("3A"):
-    query = "SELECT Id, Start, End, Type, Description, Color, Number, Total FROM Events WHERE (Id, Area) = (%s, %s)"
-  values = (id, area)
-  cursor.execute(query, values)
-  data = cursor.fetchone()
-  connection.close()
-  return data
-
-
 # Returns some informations of the events in given area
 def getInfosByArea(area):
   connection = connect()
