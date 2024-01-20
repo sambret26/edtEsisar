@@ -105,7 +105,7 @@ def browseEvents(eventsList, areaName):
     event["SimplyEnd"] = end
     eventsToSearch.append(event)
   ids = DB.searchIdsInDatabase(areaName, eventsToSearch)
-  for id in ids :
+  for id,event in zip(ids,eventsToSearch) :
     if not id:
       eventsToAdd.append(event)
     else:

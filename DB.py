@@ -137,13 +137,13 @@ def getCalIdStartSubjectUnfind(area):
 def searchIdsInDatabase(area, events):
   connection = connect()
   cursor = connection.cursor()
-  query = "SELECT Id FROM Events WHERE (Start, End, Type, Subject, Description, Color, Area) = (%s, %s, %s, %s, %s, %s, %s)"
+  query = "SELECT COALESCE(Id, NULL) FROM Events WHERE (Start, End, Type, Subject, Description, Color, Area) = (%s, %s, %s, %s, %s, %s, %s)"
   values = [(event["Start"], event["End"], event["Type"], event["Subject"],
             event["Description"], event["Color"], area) for event in events]
   cursor.executemany(query, values)
   results = cursor.fetchall()
   connection.close()
-  ids = [result[0] if result else None for result in results]
+  ids = [(result[0] if result else None) for result in results]
   return ids
 
 
