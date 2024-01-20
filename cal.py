@@ -44,11 +44,12 @@ def deleteEvent(area, calId, retry=5):
 
 # Params :
 # urlId : The id of the calendar in grenoble-inp.
+# area : The area, for logs
 # Returns :
 # A list of event read on ginp.
 # Could be [] or "invalid" in case of fail (between 1am to 2am)
-def getEvents(urlId):
-  printLogs(logs.MAJ, logs.INFO, "Fetching event on id {}".format(urlId))
+def getEvents(urlId, area):
+  printLogs(logs.MAJ, logs.INFO, "[{}] Fetching event on id {}".format(area.center(5), urlId))
   inpUrl = 'https://edt.grenoble-inp.fr/directCal/2023-2024/etudiant/esisar?resources=' + str(
     urlId
   ) + '&startDay=28&startMonth=08&startYear=2023&endDay=30&endMonth=07&endYear=2024'
@@ -131,7 +132,7 @@ def updateEvent(area, event, retry=5):
 
 # Returns all the events find in google calendar, associated with the given area
 def getCalendarEvents(area):
-  printLogs(logs.CAL, logs.INFO, "Fetching all events on {}".format(area))
+  printLogs(logs.CAL, logs.INFO, "[{}] Fetching all events".format(area.center(5)))
   calendarId = DB.getCalendarId(area)
   credentials = findCreds(area)
   service = build('calendar', 'v3', credentials=credentials)
