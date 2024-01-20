@@ -1,7 +1,9 @@
 __pycache__
-DB/tokenAgalanUncrypted
+DB/tokenAgalanUncrypted.pkl
 DB/credentials.json
 *test*
+README.md
+.env
 
 # Replit
 .breakpoints
