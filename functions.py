@@ -17,13 +17,11 @@ def load_crypted(name):
     crypted = pickle.load(f)
     return decode_credentials(crypted)
 
-
 # Returns the value of the file associated with the given name
 def load(name):
   with open('DB/' + name + '.pkl', 'rb') as f:
     crypted = pickle.load(f)
     return decode(crypted)
-
 
 # Returns the current date, with an offset if necessary (c.f. jetlag)
 def getCurrentDate():
@@ -31,7 +29,6 @@ def getCurrentDate():
   if "REPLIT" in os.environ:
     offset = 1
   return date.now() + timedelta(seconds=3600 * offset)
-
 
 # Returns the same date with one years less
 def getLastYear(date):

@@ -10,17 +10,10 @@ import schedule
 import time
 import os
 
-# KEEPING ALIVE (en cas de deploiement sur replit)
-# if "REPLIT" in os.environ:
-#   import keep_alive
-#   keep_alive.keep_alive()
-
-
 # RECURING TASKS
 def recurring_task():
   printFormat("Mise à jour des agendas")
   timetable.update()
-
 
 # MAIN
 def main():
@@ -33,7 +26,6 @@ def main():
   while 1:
     schedule.run_pending()
     time.sleep(10)
-
 
 # START
 main()
