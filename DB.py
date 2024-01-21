@@ -131,21 +131,32 @@ def getCalIdStartSubjectUnfind(area):
   return events
 
 
-# This function look if there is event swith given fields in the database
-# If yes, it returns it's Id.
-# If no, it returns [False, False, False]
+# This function look if there is events with given fields in the database
+# If yes, it put it's Id in a list
+# If no, it put NULL in this list
+# The list of ID/NULL is return
 def searchIdsInDatabase(area, events):
   connection = connect()
   cursor = connection.cursor()
-  query = "SELECT COALESCE(Id, NULL) FROM Events WHERE (Start, End, Type, Subject, Description, Color, Area) = (%s, %s, %s, %s, %s, %s, %s)"
-  values = [(event["Start"], event["End"], event["Type"], event["Subject"],
-            event["Description"], event["Color"], area) for event in events]
-  cursor.executemany(query, values)
-  results = cursor.fetchall()
+  query = "SELECT COALESCE(e.id, NULL) FROM( \n"
+  for event in events:
+      type = event['Type'].replace("'","\\'")
+      subject = event['Subject'].replace("'","\\'")
+      description = event['Description'].replace("'","\\'")
+      if description.endswith('\\') : description = description[:-1]
+      query+=f"SELECT CONVERT ('{event['Start']}' USING utf8mb4) AS Start, \n"
+      query+=f"CONVERT ('{event['End']}' USING utf8mb4) AS End, \n"
+      query += f"CONVERT('{type}' USING utf8mb4) AS Type, \n"
+      query+=f"CONVERT ('{subject}' USING utf8mb4) AS Subject, \n"
+      query+=f"CONVERT ('{description}' USING utf8mb4) AS Description, \n"
+      query+=f"'{event['Color']}' AS Color, \n"
+      query+=f"CONVERT ('{area}' USING utf8mb4) AS Area \n"
+      if event != events[-1] : query+="UNION ALL \n"
+  query += ") As v LEFT JOIN Events e ON CONVERT(e.Start USING utf8mb4) = v.Start AND CONVERT(e.End USING utf8mb4) = v.End AND CONVERT(e.Type USING utf8mb4) = v.Type AND CONVERT(e.Subject USING utf8mb4) = v.Subject AND CONVERT(e.Description USING utf8mb4) = v.Description AND e.Color = v.Color AND CONVERT(e.Area USING utf8mb4) = v.Area"
+  cursor.execute(query)
+  ids = [row[0] for row in cursor.fetchall()]
   connection.close()
-  ids = [(result[0] if result else None) for result in results]
   return ids
-
 
   ### SETTERS
 
