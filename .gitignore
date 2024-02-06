@@ -1,14 +1,8 @@
 __pycache__
 DB/tokenAgalanUncrypted.pkl
 DB/credentials.json
+logs/
+verif.py
 *test*
 README.md
 .env
-
-# Replit
-.breakpoints
-.replit
-poetry.lock
-pyproject.toml
-replit.nix
-venv/
