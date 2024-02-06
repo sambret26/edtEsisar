@@ -13,29 +13,29 @@ load_dotenv()
 
 # Returns the value of the file associated with the given name
 def load_crypted(name):
-  with open('DB/' + name + '.pkl', 'rb') as f:
-    crypted = pickle.load(f)
-    return decode_credentials(crypted)
+    with open('DB/' + name + '.pkl', 'rb') as f:
+        crypted = pickle.load(f)
+        return decode_credentials(crypted)
 
 # Returns the value of the file associated with the given name
 def load(name):
-  with open('DB/' + name + '.pkl', 'rb') as f:
-    crypted = pickle.load(f)
-    return decode(crypted)
+    with open('DB/' + name + '.pkl', 'rb') as f:
+        crypted = pickle.load(f)
+        return decode(crypted)
 
 # Returns the current date, with an offset if necessary (c.f. jetlag)
 def getCurrentDate():
-  offset = 0
-  if "REPLIT" in os.environ:
-    offset = 1
-  return date.now() + timedelta(seconds=3600 * offset)
+    offset = 0
+    if "REPLIT" in os.environ:
+        offset = 1
+    return date.now() + timedelta(seconds=3600 * offset)
 
 # Returns the same date with one years less
 def getLastYear(date):
-  d = list(str(date))
-  d[3] = str(int(d[3]) - 1)
-  newDate = ''.join(d)
-  return newDate
+    d = list(str(date))
+    d[3] = str(int(d[3]) - 1)
+    newDate = ''.join(d)
+    return newDate
 
 def code(data):
     password = os.environ.get('HASH_PASSWORD')

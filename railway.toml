@@ -1,4 +1,0 @@
-[env]
-  CREDENTIALS = "DB/credentials.json"
-  TOKEN3A = "DB/token3A.pkl"
-  TOKENAGALAN = "DB/tokenAgalan.pkl"
