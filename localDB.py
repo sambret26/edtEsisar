@@ -15,7 +15,7 @@ if (logsTypes and logsTypes == "FILES"):
 elif (logsTypes and logsTypes == "DB"):
     from logsInDB import printLogs, printModifs, printDB
 else :
-    from noLogs import printLogs, printModifs, printBD
+    from noLogs import printLogs, printModifs, printDB
 
 class MyCursor(sqlite3.Cursor):
     def execute(self, operation, params=None):
